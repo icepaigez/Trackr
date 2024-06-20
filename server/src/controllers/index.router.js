@@ -4,10 +4,10 @@ const express = require("express");
 const router = express.Router();
 
 
-const { Users } = require('./v0/users/routes/users.router');
+const { Track } = require('./v0/track/routes/track.router');
 
 
-router.use('/accounts', Users);
+router.use('/track', Track);
 
 
 router.get('/', (req, res) => {

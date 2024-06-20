@@ -6,7 +6,6 @@ const cors = require('cors');
 
 
 const { IndexRouter } = require('./controllers/index.router');
-//const config = require("./config/config")
 
 
 const PORT = process.env.PORT || 4003;
