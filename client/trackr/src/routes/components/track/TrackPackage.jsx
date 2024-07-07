@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import config from '../../../config/config';
 
 const TrackPackage = () => {
 
@@ -6,6 +7,8 @@ const TrackPackage = () => {
 
     const handleTrackingNumber = (e) => {
         e.preventDefault();
+        const serverUrl = config[import.meta.env.MODE]?.serverUrl;
+        let url = `${serverUrl}/api/v0/track/track-package`;
         console.log(trackingNumber);
         setTrackingNumber('');
     }

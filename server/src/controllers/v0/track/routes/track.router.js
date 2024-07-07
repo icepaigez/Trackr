@@ -29,6 +29,30 @@ router.get('/generate', async(req, res) => {
 	}
 })
 
+router.post('/track-package', async(req, res) => {
+	const { trackingNumber } = req.body;
+	const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+	
+	// Check if trackingNumber is a string and matches the UUID format
+	if (typeof trackingNumber !== 'string' || !uuidRegex.test(trackingNumber)) {
+		return res.status(400).send({ message: 'Invalid tracking number format' });
+	}
+	try {
+		const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber);
+		trackingNumberRef.once('value', snapshot => {
+			const data = snapshot.val();
+			if (data) {
+				res.send(data)
+			} else {
+				res.status(404).send({message:'Tracking number not found'})
+			}
+		})
+	} catch(error) {
+		console.log('Error when getting package status', err)
+		res.sendStatus(500)
+	}
+})
+
 router.post('/update', async(req, res) => {
 	const { trackingNumber, details, location, status } = req.body;
 	try {
