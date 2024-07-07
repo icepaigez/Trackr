@@ -2,7 +2,7 @@ module.exports = {
   apps : [{
     name: "jobs",
     cwd: ".",
-    script: './server.js',
+    script: './src/server.js',
     watch: ".",
     ignore_watch:["pm2"],
     env: {
@@ -16,7 +16,7 @@ module.exports = {
     max_memory_restart: '700M',
     exp_backoff_restart_delay: 200,
     max_restarts: 25,
-    out_file: './pm2/logs/jobs.log', 
-    error_file: './pm2/error_logs/jobs_error.log',
+    out_file: './src/pm2/logs/jobs.log', 
+    error_file: './src/pm2/error_logs/error.log',
   }]
 };

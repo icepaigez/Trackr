@@ -130,5 +130,5 @@ dist
 .pnp.*
 
 #private folders
-src/config/aws/creds/
-src/config/random/
+server/src/config/aws/creds/
+server/src/config/random/
