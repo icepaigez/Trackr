@@ -8,12 +8,12 @@ import './index.css'
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/track-package",
     element: <Home />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/track-package",
+    path: "/",
     element: <Track />,
     errorElement: <ErrorPage />,
   }
@@ -24,5 +24,3 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <RouterProvider router={router} />
   </React.StrictMode>,
 )
-
-//import logo from '../../../assets/logistics.gif';
