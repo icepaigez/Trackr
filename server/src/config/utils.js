@@ -1,7 +1,7 @@
-const { v4: uuidv4 } = require('uuid');
+const nanoid = require('nanoid');
 
 
-const generateTrackingNumber = () => uuidv4();
+const generateTrackingNumber = () => nanoid.nanoid(9);
 
 
 

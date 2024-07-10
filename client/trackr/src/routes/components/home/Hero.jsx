@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Loader from '../Loader';
-import PackageDetails from '../track/PackageDetails';
+import { useNavigate } from 'react-router-dom';
+import config from '../../../config/config';
 
 const Hero = () => {
 
+    const navigate = useNavigate();
     const [trackingNumber, setTrackingNumber] = useState('');
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState(null);
 
     const handleTrackingNumber = async(e) => {
         setLoading(true);
         e.preventDefault();
-        let url = `/api/v0/track/track-package`;
-        const response = await axios.post(url, { trackingNumber });
-        const { data } = response;
-        setData(data);
+        try {
+            const serverUrl = config[import.meta.env.MODE]?.serverUrl;
+            let url = `${serverUrl}/api/v0/track/track-package`;
+            const response = await axios.post(url, { trackingNumber });
+            const { data, status } = response;
+            if (status === 200) {
+                navigate('/package-details', { state: { trackingData: data } });
+            } 
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'An error occurred');
+        }
         setLoading(false);
         setTrackingNumber('');
     }
@@ -43,11 +53,18 @@ const Hero = () => {
                         <input
                             placeholder="Enter your tracking number"
                             className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111418] focus:outline-0 focus:ring-0 border border-[#dce0e5] bg-white focus:border-[#dce0e5] h-full placeholder:text-[#637588] px-[15px] rounded-r-none border-r-0 pr-2 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal"
-                            value=""
+                            value={trackingNumber}
+                            onChange={e => setTrackingNumber(e.target.value)}
                         />
                         <div className="flex items-center justify-center rounded-r-xl border-l-0 border border-[#dce0e5] bg-white pr-[7px]">
-                            <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#1972d2] text-white text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]">
-                            <span className="truncate">Track</span>
+                            <button 
+                             className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#1972d2] text-white text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]"
+                             onClick={handleTrackingNumber}
+                             disabled={!trackingNumber}
+                            >
+                                <span className="truncate">
+                                    { loading ? <Loader /> : 'Track' }
+                                </span>
                             </button>
                         </div>
                         </div>
@@ -56,29 +73,8 @@ const Hero = () => {
                 </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
-        // <div className="container mx-auto px-4 py-8">
-        //     <h1 className="text-2xl font-bold mb-4 flex items-center">
-        //         <span className="mr-2">⚪</span> Track a Package
-        //     </h1>
-        //     <div className="mb-4 sm:w-full md:w-2/4 lg:w-2/5">
-        //         <input
-        //             type="text"
-        //             placeholder="Enter a tracking number"
-        //             className="w-full p-2 border rounded"
-        //             value={trackingNumber} 
-        //             onChange={(e) => {setTrackingNumber(e.target.value)}}
-        //         />
-        //     </div>
-        //     <button 
-        //      className="bg-blue-600 text-white px-4 py-2 rounded"
-        //      onClick={handleTrackingNumber}
-        //      disabled={!trackingNumber}
-        //     >
-        //     { loading ? <Loader stroke='#FFFFFF'/> : 'Track' }
-        //     </button>
-        //    { data && <PackageDetails data={data} /> }
-        // </div>
     );
 };
 

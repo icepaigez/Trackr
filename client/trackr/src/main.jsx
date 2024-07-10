@@ -13,7 +13,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/track-package",
+    path: "/package-details",
     element: <Track />,
     errorElement: <ErrorPage />,
   }
