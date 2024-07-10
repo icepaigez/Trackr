@@ -8,12 +8,12 @@ import './index.css'
 
 const router = createBrowserRouter([
   {
-    path: "/track-package",
+    path: "/",
     element: <Home />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/",
+    path: "/track-package",
     element: <Track />,
     errorElement: <ErrorPage />,
   }
