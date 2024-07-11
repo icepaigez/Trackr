@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { generateTrackingNumber } = require("../../../../config/utils");
+const { generateTrackingNumber, isValidTrackingNumber } = require("../../../../config/utils");
 const { db } = require("../../../../config/firebase/firebase");
 
 
@@ -31,11 +31,10 @@ router.get('/generate', async(req, res) => {
 
 router.post('/track-package', async(req, res) => {
 	const { trackingNumber } = req.body;
-	const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 	
-	// Check if trackingNumber is a string and matches the UUID format
-	if (typeof trackingNumber !== 'string' || !uuidRegex.test(trackingNumber)) {
-		return res.status(400).send({ message: 'Invalid tracking number format' });
+	// Check if trackingNumber is valid
+	if (!isValidTrackingNumber(trackingNumber)) {
+		return res.status(400).send({ message: 'Invalid tracking number' });
 	}
 	try {
 		const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber);
@@ -54,7 +53,7 @@ router.post('/track-package', async(req, res) => {
 })
 
 router.post('/update', async(req, res) => {
-	const { trackingNumber, details, location, status } = req.body;
+	const { trackingNumber, details, arrived, departed, status, } = req.body;
 	try {
 		const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber);
 		trackingNumberRef.once('value', snapshot => {
@@ -64,7 +63,14 @@ router.post('/update', async(req, res) => {
 				const currentStatus = {};
 				const dateTimeEpoch = JSON.stringify(Date.parse(new Date()));
 				dataPoint['details'] = details;
-				dataPoint['location'] = location;
+				dataPoint['arrived'] = {
+					"location": arrived.location,
+					"time": arrived.time
+				};
+				dataPoint['departed'] = {
+					"location": departed.location,
+					"time": departed.time
+				};
 				dataPoint['status'] = status;
 				currentStatus[dateTimeEpoch] = dataPoint;
 				db.ref('trackingNumbers/' + trackingNumber).update(currentStatus)
