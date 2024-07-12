@@ -4,7 +4,7 @@ module.exports = {
     cwd: ".",
     script: './src/server.js',
     watch: ".",
-    ignore_watch:["pm2"],
+    ignore_watch:["src/pm2"],
     env: {
       NODE_ENV: "development",
     },

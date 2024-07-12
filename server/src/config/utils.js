@@ -28,7 +28,29 @@ function getFormattedDateTime() {
     }).replace(',', '').replace(' at', '');
 }
 
+function getLatestUnixTime(arr) {
+  const numericTimes = arr
+    .filter(item => !isNaN(item)) // Filter out non-numeric values
+    .map(Number); // Convert strings to numbers
+
+  if (numericTimes.length === 0) {
+    return null; // Return null if there are no valid timestamps
+  }
+
+  return Math.max(...numericTimes);
+}
+
+const getLatestStatus = obj => {
+  const statusKeys = Object.keys(obj);
+  const latestStatusTime = String(getLatestUnixTime(statusKeys))
+  return obj[latestStatusTime];
+}
+
+
+
+
 module.exports = {
     generateTrackingNumber,
-    isValidTrackingNumber
+    isValidTrackingNumber,
+    getLatestStatus
 }

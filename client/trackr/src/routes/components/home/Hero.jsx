@@ -18,6 +18,7 @@ const Hero = () => {
         try {
             const serverUrl = config[import.meta.env.MODE]?.serverUrl;
             let url = `${serverUrl}/api/v0/track/track-package`;
+            //let url = `/api/v0/track/track-package`;
             const response = await axios.post(url, { trackingNumber });
             const { data, status } = response;
             if (status === 200) {

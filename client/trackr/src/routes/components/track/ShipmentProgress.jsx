@@ -5,8 +5,8 @@ import pin from "./assets/pin.png";
 
 
 function ShipmentProgress({ data }) {
-
-    let trackingData = Object.values(data)[0];
+    let trackingData = data;
+    
     const progressSteps = [
     {
       icon: truck,

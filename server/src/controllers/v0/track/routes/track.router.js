@@ -1,7 +1,11 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { generateTrackingNumber, isValidTrackingNumber } = require("../../../../config/utils");
+const { 
+	generateTrackingNumber, 
+	isValidTrackingNumber, 
+	getLatestStatus 
+} = require("../../../../config/utils");
 const { db } = require("../../../../config/firebase/firebase");
 
 
@@ -41,7 +45,11 @@ router.post('/track-package', async(req, res) => {
 		trackingNumberRef.once('value', snapshot => {
 			const data = snapshot.val();
 			if (data) {
-				res.send(data)
+				const currentStatus = getLatestStatus(data)
+				res.status(200).send({
+					journey:data,
+					currentStatus
+				})
 			} else {
 				res.status(404).send({message:'Tracking number not found'})
 			}
@@ -83,9 +91,6 @@ router.post('/update', async(req, res) => {
 		console.log('Error when updating package status', err)
 	}	
 })
-
-
-
 
 
 exports.Track = router;  
