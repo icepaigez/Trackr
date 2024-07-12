@@ -44,7 +44,7 @@ router.post('/generate', async (req, res) => {
         'packageType'
     ];
 
-    const missingFields = requiredFields.filter(field => !req.body[field]);
+    const missingFields = requiredFields.filter(field => !req.body.formData[field]);
 
     if (missingFields.length > 0) {
         return res.status(400).json({
@@ -56,12 +56,13 @@ router.post('/generate', async (req, res) => {
     // Extract all fields (required and optional) from req.body
     const packageData = {};
     [...requiredFields, ...optionalFields].forEach(field => {
-        if (req.body[field] !== undefined) {
-            packageData[field] = req.body[field];
+        if (req.body.formData[field] !== undefined) {
+            packageData[field] = req.body.formData[field];
         }
     });
 
     let trackingNumber = generateTrackingNumber();
+    trackingNumber = trackingNumber.replace(/[a-z]/g, char => char.toUpperCase());
 
     try {
         const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber);

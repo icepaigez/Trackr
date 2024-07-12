@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider, } from "react-router-dom";
 import Home from './routes/Home.jsx';
 import ErrorPage from './ErrorPage.jsx';
 import Track from './routes/Track.jsx';
+import GenerateTrackingNumber from './routes/Generate.jsx';
 import './index.css'
 
 const router = createBrowserRouter([
@@ -15,6 +16,11 @@ const router = createBrowserRouter([
   {
     path: "/package-details",
     element: <Track />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/generate",
+    element: <GenerateTrackingNumber />,
     errorElement: <ErrorPage />,
   }
 ]);
