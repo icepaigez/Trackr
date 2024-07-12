@@ -11,27 +11,83 @@ const { db } = require("../../../../config/firebase/firebase");
 
 
 
-router.get('/generate', async(req, res) => {
-	let trackingNumber = generateTrackingNumber()
-	res.status(200).send({data:trackingNumber})
-	//save it to the db
-	try {
-		const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber);
-		trackingNumberRef.once('value', snapshot => {
-			const data = snapshot.val();
-			const trackPoint = {}
-			const dateTimeEpoch = JSON.stringify(Date.parse(new Date()));
-			trackPoint['created'] = dateTimeEpoch;
-			if (data === null) {
-				trackingNumberRef.set(trackPoint)
-			} else {
-				trackingNumberRef.update(trackPoint)
-			}
-		})
-	} catch(error) {
-		console.log('Error in firebase db operation', err)
-	}
-})
+router.post('/generate', async (req, res) => {
+    const requiredFields = [
+        'origin', 
+        'destination', 
+        'weight',
+        'recipient',
+        'recipientPhone',
+        'sender',
+        'senderPhone',
+		'shippingDate',
+    ];
+
+    const optionalFields = [
+        'estimatedDelivery',
+        'length',
+        'width',
+        'height',
+        'description',
+        'recipientEmail',
+        'senderEmail',
+        'declaredValue',
+        'specialHandling',
+        'deliveryInstructions',
+        'insurance',
+        'billingInfo',
+        'referenceNumber',
+        'contentsCategory',
+        'dimensionsUnit',
+        'weightUnit',
+		'serviceType',
+        'packageType'
+    ];
+
+    const missingFields = requiredFields.filter(field => !req.body[field]);
+
+    if (missingFields.length > 0) {
+        return res.status(400).json({
+            error: 'Missing required fields',
+            missingFields: missingFields
+        });
+    }
+
+    // Extract all fields (required and optional) from req.body
+    const packageData = {};
+    [...requiredFields, ...optionalFields].forEach(field => {
+        if (req.body[field] !== undefined) {
+            packageData[field] = req.body[field];
+        }
+    });
+
+    let trackingNumber = generateTrackingNumber();
+
+    try {
+        const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber);
+        const snapshot = await trackingNumberRef.once('value');
+        const existingData = snapshot.val();
+        
+        const dateTimeEpoch = Date.now().toString();
+        const trackPoint = {
+            created: {
+                dateTime: dateTimeEpoch,
+                ...packageData
+            }
+        };
+
+        if (existingData === null) {
+            await trackingNumberRef.set(trackPoint);
+        } else {
+            await trackingNumberRef.update(trackPoint);
+        }
+
+        res.status(200).json({ data: trackingNumber });
+    } catch (error) {
+        console.error('Error in firebase db operation', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 router.post('/track-package', async(req, res) => {
 	const { trackingNumber } = req.body;

@@ -1,11 +1,11 @@
 import React from 'react';
 
-function ShipmentFacts() {
+function ShipmentFacts({  status, origin, destination, shippedOn }) {
   const facts = [
-    { label: "Status", value: "In Transit" },
-    { label: "Origin", value: "San Francisco, CA" },
-    { label: "Destination", value: "New York, NY" },
-    { label: "Shipped on", value: "July 7, 2022" },
+    { label: "Status", value: status },
+    { label: "Origin", value: origin },
+    { label: "Destination", value: destination },
+    { label: "Shipped on", value: shippedOn },
     { label: "Service", value: "Morning Star Express" }
   ];
 
