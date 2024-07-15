@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const fetchAllPackages = async () => {
     try {
-        let url = getApiUrl('/api/v0/track/packages');
+        const url = getApiUrl('/api/v0/track/packages');
         const response = await axios.get(url);
         const { data, status } = response;
         if (status === 200) {
@@ -14,6 +14,8 @@ export const fetchAllPackages = async () => {
     }
 }
 
-export const updatePackageDetails = async (packageNumber, updateData) => {
-    console.log(`update data for ${packageNumber} is ${updateData}`);
+export const updatePackageDetails = async (packageNumber, updateData, lastLocation) => {
+    const url = getApiUrl('/api/v0/track/update');
+    const response = await axios.post(url, { packageNumber, updateData, lastLocation });
+    return response;
 }

@@ -4,30 +4,56 @@ import TrackingDetails from './components/admin/TrackingDetails';
 import { fetchAllPackages, updatePackageDetails } from '../utils/utils';
 import UpdatePackage from './components/admin/UpdatePackage';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import { getApiUrl } from '../config/config';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
 const AdminHome = () => {
   const [trackingData, setTrackingData] = useState({});
   const [selectedTracking, setSelectedTracking] = useState(null);
   const [isViewingDetails, setIsViewingDetails] = useState(true);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [lastLocation, setLastLocation] = useState(null);
 
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleGenerateNewTracking = () => {
     navigate('/generate');
   };
 
+  const getLastLocation = async (trackingNumber) => {
+    try {
+      let url = getApiUrl('/api/v0/track/get-package');
+      const response = await axios.post(url, { trackingNumber });
+      const { data, status } = response;
+      if (status === 200) {
+        setLastLocation(data?.lastLocation);
+      }
+    } catch(err) {
+      console.error('Failed to get last location:', err);
+    }
+  };
+
   const handleUpdatePackage = async (updatedData) => {
     try {
-      await updatePackageDetails(selectedTracking, updatedData);
-      // Refresh tracking data after update
-      const newData = await fetchAllPackages();
-      setTrackingData(newData);
-      setIsUpdateModalOpen(false);
+      const response = await updatePackageDetails(selectedTracking, updatedData, lastLocation);
+      if (response.status === 200) {
+        toast.success('Package updated successfully!');
+        // Refresh tracking data after update
+        const newData = await fetchAllPackages();
+        setTrackingData(newData?.packages);
+        setIsUpdateModalOpen(false);
+      }
     } catch (error) {
       console.error('Failed to update package:', error);
-      // Handle error (e.g., show error message to user)
     }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login'); 
   };
 
   useEffect(() => {
@@ -38,10 +64,10 @@ const AdminHome = () => {
     loadTrackingData();
   }, []);
 
-  const trackingNumbers = Object.keys(trackingData);
+  
   return (
     <>
-        <Header />
+        <Header btnText='Log out' func={handleLogout} />
         <div className="container mx-auto p-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-4 sm:space-y-0">
           <h1 className="text-2xl font-bold">All Packages</h1>
@@ -84,7 +110,10 @@ const AdminHome = () => {
                 )}
                 <div className="mt-4 flex justify-start">
                   <button
-                    onClick={() => setIsUpdateModalOpen(true)}
+                    onClick={() => {
+                      setIsUpdateModalOpen(true)
+                      getLastLocation(selectedTracking)
+                    }}
                     className="px-4 py-2 rounded bg-emerald-500 hover:bg-emerald-600 text-white"
                   >
                     Update Package
@@ -101,9 +130,11 @@ const AdminHome = () => {
             onClose={() => setIsUpdateModalOpen(false)}
             initialData={trackingData[selectedTracking]}
             onUpdate={handleUpdatePackage}
+            lastLocation={lastLocation}
           />
         )}
     </div>
+    <ToastContainer />
     </>
   )
 }

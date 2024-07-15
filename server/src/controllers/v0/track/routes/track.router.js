@@ -27,8 +27,37 @@ router.get('/packages', (req, res) => {
         console.error('Error when getting all packagesd', error);
         res.status(500).json({ error: 'Internal server error' });
     }
-   
 });
+
+router.post('/get-package', async (req, res) => {
+    const { trackingNumber } = req.body;
+    try {
+        const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber);
+        trackingNumberRef.once('value', snapshot => {
+            const data = snapshot.val();
+            let lastLocation;
+            if (data) {
+                if (Object.keys(data).length === 1) {
+                    //no status yet
+                    lastLocation = data?.created?.origin
+                } else {
+                    //get the most recent status
+                    const currentStatus = getLatestStatus(data)
+                    if (currentStatus) {
+                        lastLocation = currentStatus?.arrived?.location
+                        lastLocation = lastLocation?.split('at')[1].trim()
+                    }
+                }
+                res.status(200).send({ lastLocation })
+            } else {
+                res.status(404).send({ message: 'Tracking number not found' });
+            }
+        });
+    } catch(error) {
+        console.error('Error when getting package', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
 
 router.post('/generate', async (req, res) => {
     const requiredFields = [
@@ -137,27 +166,28 @@ router.post('/track-package', async(req, res) => {
 })
 
 router.post('/update', async(req, res) => {
-	const { trackingNumber, details, arrived, departed, status, } = req.body;
+    const { packageNumber, updateData, lastLocation } = req.body;
+    const { currentLocation, arrivalDate, departureDate, status, description } = updateData
 	try {
-		const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber);
+		const trackingNumberRef = db.ref('trackingNumbers/' + packageNumber);
 		trackingNumberRef.once('value', snapshot => {
 			const data = snapshot.val();
 			if (data) {
 				const dataPoint = {}
 				const currentStatus = {};
 				const dateTimeEpoch = JSON.stringify(Date.parse(new Date()));
-				dataPoint['details'] = details;
+				dataPoint['details'] = description;
 				dataPoint['arrived'] = {
-					"location": arrived.location,
-					"time": arrived.time
+					"location": currentLocation,
+					"time": arrivalDate
 				};
 				dataPoint['departed'] = {
-					"location": departed.location,
-					"time": departed.time
+					"location": lastLocation,
+					"time": departureDate
 				};
 				dataPoint['status'] = status;
 				currentStatus[dateTimeEpoch] = dataPoint;
-				db.ref('trackingNumbers/' + trackingNumber).update(currentStatus)
+				db.ref('trackingNumbers/' + packageNumber).update(currentStatus)
 				res.sendStatus(200);
 			} else {
 				res.status(404).send({message:'Tracking number not found'})
@@ -165,6 +195,7 @@ router.post('/update', async(req, res) => {
 		})
 	} catch(error) {
 		console.log('Error when updating package status', err)
+        res.sendStatus(500)
 	}	
 })
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({ btnText, func }) => {
   const navigate = useNavigate();
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f4] px-10 py-3">
@@ -11,7 +11,12 @@ const Header = () => {
             <path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
           </svg>
         </div>
-        <h2 className="text-[#111418] text-sm sm:text-lg font-bold leading-tight tracking-[-0.015em] cursor-pointer">Morning Star Express</h2>
+        <h2 
+         className="text-[#111418] text-sm sm:text-lg font-bold leading-tight tracking-[-0.015em] cursor-pointer"
+         onClick={() => navigate('/')}
+        >
+          Morning Star Express
+        </h2>
       </div>
       <div className="flex flex-1 justify-end gap-8">
         {/* <label className="flex flex-col min-w-40 !h-10 max-w-64">
@@ -28,9 +33,12 @@ const Header = () => {
             />
           </div>
         </label> */}
-        {/* <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#1972d2] text-white text-sm font-bold leading-normal tracking-[0.015em]">
-          <span className="truncate">Sign In</span>
-        </button> */}
+        {btnText && <button 
+         className="px-4 py-2 rounded bg-emerald-500 hover:bg-emerald-600 text-white cursor-pointer"
+         onClick={func}
+        >
+          <span className="truncate">{ btnText }</span>
+        </button>}
       </div>
     </header>
   );

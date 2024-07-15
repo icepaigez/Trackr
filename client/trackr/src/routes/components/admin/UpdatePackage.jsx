@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 
-const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate }) => {
+const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation }) => {
   const [formData, setFormData] = useState({
     currentLocation: initialData.currentLocation || '',
-    estimatedDelivery: initialData.estimatedDelivery || '',
+    arrivalDate: initialData.arrivalDate || '',
+    departureDate: initialData.departureDate || '',
     status: initialData.status || '',
+    description: initialData.description || '',
     // Add more fields as needed
   });
 
@@ -22,14 +24,14 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate }) => {
   };
 
   const isFormValid = () => {
-    return Object.values(formData).some(value => value.trim() !== '');
+    return Object.values(formData).every(value => value.trim() !== '');
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center" id="my-modal">
-      <div className="relative mx-auto p-5 border w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl shadow-lg rounded-md bg-white my-4 mx-4">
+      <div className="relative top-5 md:top-0 mx-auto p-5 border w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl shadow-lg rounded-md bg-white my-4 mx-4 max-h-[90vh] overflow-y-auto">
         <div className="mt-3">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center mb-4">Update Package</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -42,18 +44,45 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate }) => {
                 name="currentLocation"
                 value={formData.currentLocation}
                 onChange={handleChange}
+                required
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="estimatedDelivery">
-                Estimated Delivery
+                Arrival Date @ Location
               </label>
               <input
                 type="date"
-                name="estimatedDelivery"
-                value={formData.estimatedDelivery}
+                name="arrivalDate"
+                value={formData.arrivalDate}
                 onChange={handleChange}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="currentLocation">
+                Last Location
+              </label>
+              <input
+                type="text"
+                name="lastLocation"
+                readOnly={true}
+                placeholder={lastLocation}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="estimatedDelivery">
+                Departure Date from Location
+              </label>
+              <input
+                type="date"
+                name="departureDate"
+                value={formData.departureDate}
+                onChange={handleChange}
+                required
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
@@ -65,6 +94,7 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate }) => {
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
+                required
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
                 <option value="">Select Status</option>
@@ -73,6 +103,17 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate }) => {
                 <option value="Delayed">Delayed</option>
                 {/* Add more status options as needed */}
               </select>
+            </div>
+            <div>
+              <label className="block mb-2">Description</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                rows="3"
+                required
+                ></textarea>
             </div>
             {/* Add more form fields as needed */}
             <div className="flex flex-col sm:flex-row items-center justify-between mt-6 space-y-3 sm:space-y-0 sm:space-x-3">
