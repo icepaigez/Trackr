@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from '../Loader';
 import { useNavigate } from 'react-router-dom';
-import config from '../../../config/config';
+import { getApiUrl } from '../../../config/config';
 
 const Hero = () => {
 
@@ -16,9 +16,7 @@ const Hero = () => {
         setLoading(true);
         e.preventDefault();
         try {
-            const serverUrl = config[import.meta.env.MODE]?.serverUrl;
-            let url = `${serverUrl}/api/v0/track/track-package`;
-            //let url = `/api/v0/track/track-package`;
+            let url = getApiUrl('/api/v0/track/track-package');
             const response = await axios.post(url, { trackingNumber });
             const { data, status } = response;
             if (status === 200) {

@@ -15,8 +15,8 @@ function ShipmentFacts({  status, origin, destination, shippedOn }) {
       <div className="p-4">
         {facts.map((fact, index) => (
           <div key={index} className="flex justify-between gap-x-6 py-2">
-            <p className="text-[#637588] text-sm font-normal leading-normal">{fact.label}</p>
-            <p className="text-[#111418] text-sm font-normal leading-normal text-right">{fact.value}</p>
+           { fact?.value && <p className="text-[#637588] text-sm font-normal leading-normal">{fact?.label}</p> }
+           { fact?.value && <p className="text-[#111418] text-sm font-normal leading-normal text-right">{fact?.value}</p> }
           </div>
         ))}
       </div>

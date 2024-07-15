@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const PackageDetails = ({ data }) => {
   const navigate = useNavigate();
   const { journey, currentStatus } = data;
+
   return (
     <div className="layout-content-container flex flex-col max-w-[960px] w-full">
       <div className="flex flex-wrap justify-between gap-3 p-4">
@@ -20,14 +21,14 @@ const PackageDetails = ({ data }) => {
           <span className="truncate">Track Another Shipment</span>
         </button>
       </div>
-      <ShipmentProgress data={currentStatus} />
-      <PackageJourney journey={journey} />
+      { currentStatus ? <ShipmentProgress data={currentStatus} /> : <div className="px-2 sm:px-4">Package is being processed for delivery.</div> }
+      { Object.keys(journey).length > 1 && <PackageJourney journey={journey} /> }
       <div>
         <h3 className="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Estimated Delivery</h3>
         <p className="text-[#111418] text-base font-normal leading-normal pb-3 pt-1 px-4">July 9, 2022</p>
       </div>
       <ShipmentFacts 
-       status={currentStatus.status}
+       status={currentStatus?.status}
        origin={journey?.created?.origin}
        destination={journey?.created?.destination}
        shippedOn={journey?.created?.shippingDate}

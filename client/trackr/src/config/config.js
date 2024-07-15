@@ -1,10 +1,3 @@
-const config = {
-    development: {
-      serverUrl: `http://${import.meta.env.VITE_LOCAL_HOST}:4003`,
-    },
-    production: {
-      serverUrl: import.meta.env.VITE_EC2_HOST,
-    },
-};
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
 
-export default config;     
+export const getApiUrl = (endpoint) => `${apiBaseUrl}${endpoint}`;

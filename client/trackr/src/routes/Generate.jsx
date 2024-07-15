@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/home/Header';
-import config from '../config/config';
+import { getApiUrl }from '../config/config';
 import Loader from "./components/Loader";
 
 const GenerateTrackingNumber = () => {
@@ -61,9 +61,7 @@ const GenerateTrackingNumber = () => {
       return;
     }
 
-    const serverUrl = config[import.meta.env.MODE]?.serverUrl;
-    let url = `${serverUrl}/api/v0/track/generate`;
-    //let url = `/api/v0/track/generate`;
+    let url = getApiUrl('/api/v0/track/generate');   
     try {
         const response = await axios.post(url, { formData });
         const { data, status } = response;

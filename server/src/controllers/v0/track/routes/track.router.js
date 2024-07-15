@@ -10,6 +10,25 @@ const { db } = require("../../../../config/firebase/firebase");
 
 
 
+router.get('/packages', (req, res) => {
+    const packagesRef = db.ref('trackingNumbers');
+    try {
+        packagesRef.once('value', snapshot => {
+            const data = snapshot.val();
+            if (data) {
+                res.status(200).send({
+                    packages: data
+                });
+            } else {
+                res.status(404).send({ message: 'No packages found' });
+            }
+        });
+    } catch (error) {
+        console.error('Error when getting all packagesd', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+   
+});
 
 router.post('/generate', async (req, res) => {
     const requiredFields = [
