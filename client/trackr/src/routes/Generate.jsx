@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/home/Header';
 import { getApiUrl }from '../config/config';
 import Loader from "./components/Loader";
+import { useNavigate } from 'react-router-dom';
+
 
 const GenerateTrackingNumber = () => {
   const [formData, setFormData] = useState({
@@ -37,6 +39,7 @@ const GenerateTrackingNumber = () => {
   });
   const [trackingNumber, setTrackingNumber] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const requiredFields = [
     'origin', 'destination', 'weight', 'recipient', 'recipientPhone',
@@ -108,7 +111,15 @@ const GenerateTrackingNumber = () => {
     <>
         <Header />
          <div className="container mx-auto px-10 sm:px-20 lg:px-60 justify-center py-5 mt-5">
-            <h1 className="text-2xl font-bold mb-6">Generate Tracking Number</h1>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-4 sm:space-y-0">
+                <h1 className="text-2xl font-bold">New Tracking Number</h1>
+                <button 
+                    onClick={() => navigate('/admin')}
+                    className="w-full sm:w-auto bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded text-sm sm:text-base"
+                >
+                    Home
+                </button>
+            </div>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Required Fields */}
@@ -393,10 +404,10 @@ const GenerateTrackingNumber = () => {
                 <div className="mt-6 flex items-center space-x-4">
                     <button 
                         type="submit" 
-                        className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ${trackingNumber ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`bg-slate-500 hover:bg-slate-600 text-white px-4 py-2 rounded ${trackingNumber ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={!!trackingNumber}
                     >
-                        { loading ? <Loader /> : 'Generate Tracking Number' }
+                        { loading ? <Loader /> : 'Generate' }
                     </button>
                     {trackingNumber && (
                         <div className="text-green-600 font-semibold">
