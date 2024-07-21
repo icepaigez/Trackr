@@ -43,7 +43,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/signup",
+    path: "/msexpress",
     element: <Signup />,
     errorElement: <ErrorPage />,
   },

@@ -10,7 +10,6 @@ const TrackingDetails = ({ details, trackingNumber }) => {
       .sort((a, b) => parseInt(b) - parseInt(a));
     }
     
-  
     const createdInfo = details?.created;
   
     return (
@@ -47,6 +46,7 @@ const TrackingDetails = ({ details, trackingNumber }) => {
           return (
             <div key={timestamp} className="mt-4 border-t pt-2">
               <h4 className="font-semibold">{formatDate(timestamp)}</h4>
+              <p><strong>ID:</strong> {timestamp}</p>
               <p><strong>Status:</strong> {update?.status}</p>
               <p><strong>Arrived:</strong> {update?.arrived.location} at {update?.arrived?.time}</p>
               <p><strong>Departed:</strong> {update?.departed.location} at {update?.departed?.time}</p>

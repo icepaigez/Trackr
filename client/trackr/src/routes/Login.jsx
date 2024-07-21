@@ -76,7 +76,7 @@ const Login = () => {
           </form>
 
           <div className="mt-6">
-            <div className="relative">
+            {/* <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300" />
               </div>
@@ -85,15 +85,15 @@ const Login = () => {
                   Or
                 </span>
               </div>
-            </div>
+            </div> */}
 
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <div className="text-sm">
                 <Link to="/signup" className="font-medium text-emerald-600 hover:text-emerald-500">
                   Don't have an account? Sign up
                 </Link>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -45,7 +45,7 @@ router.post('/get-package', async (req, res) => {
                     const currentStatus = getLatestStatus(data)
                     if (currentStatus) {
                         lastLocation = currentStatus?.arrived?.location
-                        lastLocation = lastLocation?.split('at')[1].trim()
+                        lastLocation = lastLocation?.split('at')[1]?.trim()
                     }
                 }
                 res.status(200).send({ lastLocation })
