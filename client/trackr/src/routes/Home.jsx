@@ -1,7 +1,8 @@
-import Header from './components/home/Header'
-import Hero from './components/home/Hero'
-import Footer from './components/home/Footer'
-import Navbar from './components/home/NavBar'
+import React from 'react';
+import Header from './components/home/Header';
+import Navbar from './components/home/NavBar';
+import Hero from './components/home/Hero';
+import Footer from './components/home/Footer';
 
 function Home() {
   return (
@@ -9,11 +10,13 @@ function Home() {
       <div className="layout-container flex h-full grow flex-col rounded-2xl">
         <Header />
         <Navbar />
-        <Hero />
+        <div className="flex-grow relative">
+          <Hero />
+        </div>
         <Footer />
       </div>
     </div>
-  )
+  );
 }
 
-export default Home 
+export default Home;
