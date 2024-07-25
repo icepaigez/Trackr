@@ -29,7 +29,7 @@ const AdminHome = () => {
   const handleGenerateNewTracking = () => {
     navigate('/generate');
   };
-
+ 
   const getLastLocation = async (trackingNumber) => {
     try {
       let url = getApiUrl('/api/v0/track/get-package');

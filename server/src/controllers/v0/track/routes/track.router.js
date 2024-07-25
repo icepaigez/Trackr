@@ -31,8 +31,9 @@ router.get('/packages', (req, res) => {
 
 router.post('/get-package', async (req, res) => {
     const { trackingNumber } = req.body;
+    
     try {
-        const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber);
+        const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber.toUpperCase());
         trackingNumberRef.once('value', snapshot => {
             const data = snapshot.val();
             let lastLocation;
@@ -146,7 +147,7 @@ router.post('/track-package', async(req, res) => {
 		return res.status(400).send({ message: 'Invalid tracking number' });
 	}
 	try {
-		const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber);
+		const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber.toUpperCase());
 		trackingNumberRef.once('value', snapshot => {
 			const data = snapshot.val();
 			if (data) {
@@ -167,7 +168,7 @@ router.post('/track-package', async(req, res) => {
 
 router.post('/update', async(req, res) => {
     const { packageNumber, updateData, lastLocation, isEdit, timestamp } = req.body;
-    const trackingNumberRef = db.ref('trackingNumbers/' + packageNumber);
+    const trackingNumberRef = db.ref('trackingNumbers/' + packageNumber.toUpperCase());
     if (isEdit === false) {
         const { currentLocation, arrivalDate, departureDate, status, description } = updateData
         try {
