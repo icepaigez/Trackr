@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
   const navItems = [
     { name: 'Track', path: '/track' },
-    { name: 'Ship', path: '/ship' },
+    { name: 'Ship', path: '/' },
     // { name: 'Enterprise Logistics Services', path: '/enterprise' },
-    { name: 'Customer Service', path: '/customer-service' },
+    { name: 'Customer Service', path: '/' },
   ];
 
   return (

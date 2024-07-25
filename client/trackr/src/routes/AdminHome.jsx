@@ -5,6 +5,9 @@ import axios from 'axios';
 import Header from './components/home/Header';
 import TrackingDetails from './components/admin/TrackingDetails';
 import UpdatePackage from './components/admin/UpdatePackage';
+import EditTrackingForm from './components/track/EditTrackingForm';
+import EditPackageForm from './components/track/EditPackageForm';
+import EditUpdateForm from './components/track/EditUpdateForm';
 import { fetchAllPackages, updatePackageDetails } from '../utils/utils';
 import { getApiUrl } from '../config/config';
 import { useAuth } from '../context/AuthContext';
@@ -16,6 +19,7 @@ const AdminHome = () => {
   const [isViewingDetails, setIsViewingDetails] = useState(true);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [editingSection, setEditingSection] = useState(null);
   const [lastLocation, setLastLocation] = useState(null);
   const [inputValue, setInputValue] = useState('');
 
@@ -39,10 +43,9 @@ const AdminHome = () => {
     }
   };
 
-  const handleUpdatePackage = async (updatedData, isEdit = false) => {
-    console.log('Updated data:', updatedData, isEdit, selectedTracking);
+  const handleUpdatePackage = async (updatedData, isEdit = false, timestamp = null) => {
     try {
-      const response = await updatePackageDetails(selectedTracking, updatedData, lastLocation, isEdit);
+      const response = await updatePackageDetails(selectedTracking, updatedData, lastLocation, isEdit, timestamp);
       if (response.status === 200) {
         toast.success(isEdit ? 'Package edited successfully!' : 'Package updated successfully!');
         // Refresh tracking data after update
@@ -52,12 +55,14 @@ const AdminHome = () => {
         setIsUpdateModalOpen(false);
         setIsEditing(false);
         setIsViewingDetails(true);
+        setEditingSection(null);
       }
     } catch (error) {
       console.error('Failed to update package:', error);
       toast.error(`Failed to ${isEdit ? 'edit' : 'update'} package. Please try again.`);
     }
   };
+
 
   const handleLogout = async () => {
     await logout();
@@ -78,9 +83,61 @@ const AdminHome = () => {
     setFilteredData(filtered);
   };
 
-  const handleEditPackage = () => {
+  const handleEditSection = (section) => {
+    setEditingSection(section);
     setIsEditing(true);
     setIsViewingDetails(false);
+  };
+
+  // const handleEditPackage = () => {
+  //   setIsEditing(true);
+  //   setIsViewingDetails(false);
+  // };
+
+  const renderEditForm = () => {
+    const packageData = filteredData[selectedTracking];
+    switch (editingSection) {
+      case 'tracking':
+        return (
+          <EditTrackingForm
+            initialData={packageData}
+            onSubmit={(updatedData) => handleUpdatePackage(updatedData, true)}
+            onCancel={() => {
+              setIsEditing(false);
+              setIsViewingDetails(true);
+              setEditingSection(null);
+            }}
+          />
+        );
+      case 'package':
+        return (
+          <EditPackageForm
+            initialData={packageData.created}
+            onSubmit={(updatedData) => handleUpdatePackage(updatedData, true)}
+            onCancel={() => {
+              setIsEditing(false);
+              setIsViewingDetails(true);
+              setEditingSection(null);
+            }}
+          />
+        );
+      default:
+        if (editingSection?.startsWith('update-')) {
+          const updateTimestamp = editingSection.split('-')[1];
+          return (
+            <EditUpdateForm
+              initialData={packageData[updateTimestamp]}
+              onSubmit={(updatedData) => handleUpdatePackage(updatedData, true, updateTimestamp)}
+              onCancel={() => {
+                setIsEditing(false);
+                setIsViewingDetails(true);
+                setEditingSection(null);
+              }}
+            />
+          );
+        }
+        return null;
+    }
   };
 
   useEffect(() => {
@@ -133,6 +190,7 @@ const AdminHome = () => {
                     setSelectedTracking(number);
                     setIsViewingDetails(true);
                     setIsEditing(false);
+                    setEditingSection(null);
                   }}
                 >
                   {number}
@@ -145,7 +203,11 @@ const AdminHome = () => {
               <div>
                 {isViewingDetails ? (
                   <>
-                    <TrackingDetails details={filteredData[selectedTracking]} trackingNumber={selectedTracking} />
+                    <TrackingDetails 
+                      details={filteredData[selectedTracking]} 
+                      trackingNumber={selectedTracking} 
+                      onEditSection={handleEditSection}
+                    />
                     <div className="mt-4 flex justify-start space-x-4">
                       <button
                         onClick={() => {
@@ -156,24 +218,16 @@ const AdminHome = () => {
                       >
                         Update Package
                       </button>
-                      <button
+                      {/* <button
                         onClick={handleEditPackage}
                         className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
                       >
                         Edit Package
-                      </button>
+                      </button> */}
                     </div>
                   </>
                 ) : isEditing ? (
-                  <UpdatePackage
-                    initialData={filteredData[selectedTracking]}
-                    onUpdate={(updatedData) => handleUpdatePackage(updatedData, true)}
-                    onClose={() => {
-                      setIsEditing(false);
-                      setIsViewingDetails(true);
-                    }}
-                    isEdit={true}
-                  />
+                  renderEditForm()
                 ) : null}
               </div>
             )}

@@ -20,7 +20,7 @@ const Hero = () => {
             const response = await axios.post(url, { trackingNumber });
             const { data, status } = response;
             if (status === 200) {
-                navigate('/package-details', { state: { trackingData: data } });
+                navigate('/track', { state: { trackingData: data, trackingNumber } });
             } 
         } catch (error) {
             toast.error(error.response?.data?.message || 'An error occurred');

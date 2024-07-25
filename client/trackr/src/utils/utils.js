@@ -14,8 +14,8 @@ export const fetchAllPackages = async () => {
     }
 }
 
-export const updatePackageDetails = async (packageNumber, updateData, lastLocation) => {
+export const updatePackageDetails = async (packageNumber, updateData, lastLocation, isEdit, timestamp) => {
     const url = getApiUrl('/api/v0/track/update');
-    const response = await axios.post(url, { packageNumber, updateData, lastLocation });
+    const response = await axios.post(url, { packageNumber, updateData, lastLocation, isEdit, timestamp });
     return response;
 }

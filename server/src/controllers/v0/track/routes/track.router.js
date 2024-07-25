@@ -4,7 +4,7 @@ const router = express.Router();
 const { 
 	generateTrackingNumber, 
 	isValidTrackingNumber, 
-	getLatestStatus 
+	getLatestStatus  
 } = require("../../../../config/utils");
 const { db } = require("../../../../config/firebase/firebase");
 
@@ -45,7 +45,7 @@ router.post('/get-package', async (req, res) => {
                     const currentStatus = getLatestStatus(data)
                     if (currentStatus) {
                         lastLocation = currentStatus?.arrived?.location
-                        lastLocation = lastLocation?.split('at')[1]?.trim()
+                        lastLocation = lastLocation?.includes('at') ? lastLocation?.split('at')[1]?.trim() : lastLocation
                     }
                 }
                 res.status(200).send({ lastLocation })
@@ -70,7 +70,7 @@ router.post('/generate', async (req, res) => {
         'senderPhone',
 		'shippingDate',
     ];
-
+ 
     const optionalFields = [
         'estimatedDelivery',
         'length',
@@ -166,37 +166,57 @@ router.post('/track-package', async(req, res) => {
 })
 
 router.post('/update', async(req, res) => {
-    const { packageNumber, updateData, lastLocation } = req.body;
-    const { currentLocation, arrivalDate, departureDate, status, description } = updateData
-	try {
-		const trackingNumberRef = db.ref('trackingNumbers/' + packageNumber);
-		trackingNumberRef.once('value', snapshot => {
-			const data = snapshot.val();
-			if (data) {
-				const dataPoint = {}
-				const currentStatus = {};
-				const dateTimeEpoch = JSON.stringify(Date.parse(new Date()));
-				dataPoint['details'] = description;
-				dataPoint['arrived'] = {
-					"location": currentLocation,
-					"time": arrivalDate
-				};
-				dataPoint['departed'] = {
-					"location": lastLocation,
-					"time": departureDate
-				};
-				dataPoint['status'] = status;
-				currentStatus[dateTimeEpoch] = dataPoint;
-				db.ref('trackingNumbers/' + packageNumber).update(currentStatus)
-				res.sendStatus(200);
-			} else {
-				res.status(404).send({message:'Tracking number not found'})
-			}
-		})
-	} catch(error) {
-		console.log('Error when updating package status', err)
-        res.sendStatus(500)
-	}	
+    const { packageNumber, updateData, lastLocation, isEdit, timestamp } = req.body;
+    const trackingNumberRef = db.ref('trackingNumbers/' + packageNumber);
+    if (isEdit === false) {
+        const { currentLocation, arrivalDate, departureDate, status, description } = updateData
+        try {
+            trackingNumberRef.once('value', snapshot => {
+                const data = snapshot.val();
+                if (data) {
+                    const dataPoint = {}
+                    const currentStatus = {};
+                    const dateTimeEpoch = JSON.stringify(Date.parse(new Date()));
+                    dataPoint['details'] = description;
+                    dataPoint['arrived'] = {
+                        "location": currentLocation,
+                        "time": arrivalDate
+                    };
+                    dataPoint['departed'] = {
+                        "location": lastLocation,
+                        "time": departureDate
+                    };
+                    dataPoint['status'] = status;
+                    currentStatus[dateTimeEpoch] = dataPoint;
+                    db.ref('trackingNumbers/' + packageNumber).update(currentStatus)
+                    res.sendStatus(200);
+                } else {
+                    res.status(404).send({message:'Tracking number not found!'})
+                }
+            })
+        } catch(error) {
+            console.log('Error when updating package status', err)
+            res.sendStatus(500)
+        }
+    } else {
+        if (timestamp !== null) {
+            try {
+                trackingNumberRef?.child(timestamp).update(updateData)
+                res.sendStatus(200)
+            } catch(error) {
+                console.log(`Error when updating package information at timestamp ${timestamp}`, error)
+                res.sendStatus(500)
+            }
+        } else {
+            try {
+                trackingNumberRef?.child('created').update(updateData)
+                res.sendStatus(200)
+            } catch(error) {
+                console.log('Error when updating original package information', error)
+                res.sendStatus(500)
+            }
+        }
+    }  	
 })
 
 
