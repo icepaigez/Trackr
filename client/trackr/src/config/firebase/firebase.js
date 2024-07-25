@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import firebaseDevConfig from "./trackrDev";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -11,5 +12,11 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+let app;
+if (import.meta.env.PROD) {
+    app = initializeApp(firebaseConfig);
+} else {
+    app = initializeApp(firebaseDevConfig);
+}
+
 export const auth = getAuth(app);

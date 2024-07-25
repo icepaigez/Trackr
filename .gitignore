@@ -132,3 +132,4 @@ dist
 #private folders
 server/src/config/aws/creds/
 server/src/config/random/
+server/src/config/firebase/trackr_dev.js
