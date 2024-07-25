@@ -14,17 +14,10 @@ const TrackingDetails = ({ details, trackingNumber, onEditSection }) => {
   }
   
   const createdInfo = details?.created;
-
   return (
     <div className="bg-white p-4 rounded-lg shadow">
       <h2 className="text-xl font-semibold mb-4 flex justify-between items-center">
         Tracking Details for {trackingNumber}
-        {/* <button
-          onClick={() => onEditSection('tracking')}
-          className="px-2 py-1 bg-blue-500 text-white rounded text-sm"
-        >
-          Edit
-        </button> */}
       </h2>
       
       <div className="mb-6 border-b pb-4">

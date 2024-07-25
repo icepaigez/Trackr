@@ -22,13 +22,16 @@ const EditUpdateForm = ({ initialData, onSubmit, onCancel }) => {
       <h2 className="text-xl font-bold mb-4">Edit Update Information</h2>
       <div>
         <label className="block mb-1">Status:</label>
-        <input
-          type="text"
+        <select
           name="status"
           value={formData.status}
           onChange={handleChange}
           className="w-full border rounded px-2 py-1"
-        />
+        >
+          <option value="In Transit">In Transit</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Delayed">Delayed</option>
+        </select>
       </div>
       <div>
         <label className="block mb-1">Arrived:</label>

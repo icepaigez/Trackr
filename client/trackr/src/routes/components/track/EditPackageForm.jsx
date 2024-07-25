@@ -38,6 +38,10 @@ const EditPackageForm = ({ initialData, onSubmit, onCancel }) => {
     onSubmit(formData);
   };
 
+  const isDateField = (key) => {
+    return key === 'shippingDate' || key === 'estimatedDelivery';
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <h2 className="text-xl font-bold mb-4">Edit Package Information</h2>
@@ -45,7 +49,7 @@ const EditPackageForm = ({ initialData, onSubmit, onCancel }) => {
         <div key={key}>
           <label className="block mb-1 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</label>
           <input
-            type="text"
+            type={isDateField(key) ? "date" : "text"}
             name={key}
             value={value}
             onChange={handleChange}

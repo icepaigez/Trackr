@@ -24,7 +24,7 @@ function ShipmentProgress({ data }) {
       date: trackingData?.status
     }
   ];
-
+ 
   return (
     <div className="px-2 sm:px-4">
       <h3 className="text-[#111418] text-base sm:text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">Shipment Progress</h3>

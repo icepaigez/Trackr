@@ -89,11 +89,6 @@ const AdminHome = () => {
     setIsViewingDetails(false);
   };
 
-  // const handleEditPackage = () => {
-  //   setIsEditing(true);
-  //   setIsViewingDetails(false);
-  // };
-
   const renderEditForm = () => {
     const packageData = filteredData[selectedTracking];
     switch (editingSection) {
@@ -171,7 +166,7 @@ const AdminHome = () => {
                 </svg>
               </div>
               <input
-                placeholder="Search"
+                placeholder="Sender Name"
                 className="form-input flex flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f4] focus:border-none h-full placeholder:text-[#637588] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
                 value={inputValue}
                 onChange={handleInputChange}
@@ -218,12 +213,6 @@ const AdminHome = () => {
                       >
                         Update Package
                       </button>
-                      {/* <button
-                        onClick={handleEditPackage}
-                        className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
-                      >
-                        Edit Package
-                      </button> */}
                     </div>
                   </>
                 ) : isEditing ? (
