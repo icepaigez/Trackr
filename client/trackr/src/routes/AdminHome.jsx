@@ -42,7 +42,7 @@ const AdminHome = () => {
       console.error('Failed to get last location:', err);
     }
   };
-
+ 
   const handleUpdatePackage = async (updatedData, isEdit = false, timestamp = null) => {
     try {
       const response = await updatePackageDetails(selectedTracking, updatedData, lastLocation, isEdit, timestamp);
@@ -122,12 +122,13 @@ const AdminHome = () => {
           return (
             <EditUpdateForm
               initialData={packageData[updateTimestamp]}
-              onSubmit={(updatedData) => handleUpdatePackage(updatedData, true, updateTimestamp)}
+              onSubmit={handleUpdatePackage}
               onCancel={() => {
                 setIsEditing(false);
                 setIsViewingDetails(true);
                 setEditingSection(null);
               }}
+              updateTimestamp={updateTimestamp}
             />
           );
         }

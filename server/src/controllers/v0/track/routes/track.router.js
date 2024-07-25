@@ -142,7 +142,7 @@ router.post('/generate', async (req, res) => {
 router.post('/track-package', async(req, res) => {
 	const { trackingNumber } = req.body;
 	
-	// Check if trackingNumber is valid
+	// Check if trackingNumber is valid 
 	if (!isValidTrackingNumber(trackingNumber)) {
 		return res.status(400).send({ message: 'Invalid tracking number' });
 	}
@@ -165,7 +165,7 @@ router.post('/track-package', async(req, res) => {
 		res.sendStatus(500)
 	}
 })
-
+  
 router.post('/update', async(req, res) => {
     const { packageNumber, updateData, lastLocation, isEdit, timestamp } = req.body;
     const trackingNumberRef = db.ref('trackingNumbers/' + packageNumber.toUpperCase());
