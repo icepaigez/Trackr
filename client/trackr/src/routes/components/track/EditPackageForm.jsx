@@ -30,7 +30,9 @@ const EditPackageForm = ({ initialData, onSubmit, onCancel }) => {
   });
  
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type } = e.target;
+    const newValue = type === 'number' ? (value === '' ? '' : Number(value)) : value;
+    setFormData({ ...formData, [name]: newValue });
   };
 
   const handleSubmit = (e) => {
@@ -42,19 +44,87 @@ const EditPackageForm = ({ initialData, onSubmit, onCancel }) => {
     return key === 'shippingDate' || key === 'estimatedDelivery';
   };
 
+  const isDropdownField = (key) => {
+    return ['serviceType', 'packageType', 'contentsCategory', 'dimensionsUnit', 'weightUnit'].includes(key);
+  };
+
+  const isNumberField = (key) => {
+    return ['length', 'width', 'height', 'weight'].includes(key);
+  };
+
+  const getDropdownOptions = (key) => {
+    switch (key) {
+      case 'serviceType':
+        return ['Express', 'Standard', 'Economy'];
+      case 'packageType':
+        return ['Box', 'Envelope', 'Pallet'];
+      case 'contentsCategory':
+        return ['Gift', 'Documents', 'Commercial', 'Sample'];
+      case 'dimensionsUnit':
+        return ['cm', 'mm', 'in', 'm'];
+      case 'weightUnit':
+        return ['kg', 'g', 'lb', 'oz'];
+      default:
+        return [];
+    }
+  };
+
+  const renderField = (key, value) => {
+    if (isDateField(key)) {
+      return (
+        <input
+          type="date"
+          name={key}
+          value={value}
+          onChange={handleChange}
+          className="w-full border rounded px-2 py-1"
+        />
+      );
+    } else if (isDropdownField(key)) {
+      return (
+        <select
+          name={key}
+          value={value}
+          onChange={handleChange}
+          className="w-full border rounded px-2 py-1"
+        >
+          {getDropdownOptions(key).map(option => (
+            <option key={option} value={option}>{option}</option>
+          ))}
+        </select>
+      );
+    } else if (isNumberField(key)) {
+      return (
+        <input
+          type="number"
+          name={key}
+          value={value}
+          onChange={handleChange}
+          className="w-full border rounded px-2 py-1"
+          min="0"
+          step="0.01"
+        />
+      );
+    } else {
+      return (
+        <input
+          type="text"
+          name={key}
+          value={value}
+          onChange={handleChange}
+          className="w-full border rounded px-2 py-1"
+        />
+      );
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <h2 className="text-xl font-bold mb-4">Edit Package Information</h2>
       {Object.entries(formData).map(([key, value]) => (
         <div key={key}>
           <label className="block mb-1 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</label>
-          <input
-            type={isDateField(key) ? "date" : "text"}
-            name={key}
-            value={value}
-            onChange={handleChange}
-            className="w-full border rounded px-2 py-1"
-          />
+          {renderField(key, value)}
         </div>
       ))}
       <div className="flex justify-end space-x-2">
