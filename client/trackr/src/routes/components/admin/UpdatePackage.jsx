@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
-const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, isEdit }) => {
+const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, isEdit, lastLocationDepartureDate }) => {
   const [formData, setFormData] = useState({
     currentLocation: '',
     arrivalDate: '',
-    departureDate: '',
+    // departureDate: '',
     status: '',
     description: '',
     // Add more fields as needed for editing
-    sender: '',
-    recipient: '',
-    weight: '',
-    dimensions: '',
+    // sender: '',
+    // recipient: '',
+    // weight: '', 
+    // dimensions: '',
   });
 
   useEffect(() => {
@@ -19,14 +19,14 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
       setFormData({
         currentLocation: initialData.currentLocation || '',
         arrivalDate: initialData.arrivalDate || '',
-        departureDate: initialData.departureDate || '',
+        // departureDate: initialData.departureDate || '',
         status: initialData.status || '',
         description: initialData.description || '',
         // Add more fields for editing
-        sender: initialData.sender || '',
-        recipient: initialData.recipient || '',
-        weight: initialData.weight || '',
-        dimensions: initialData.dimensions || '',
+        // sender: initialData.sender || '',
+        // recipient: initialData.recipient || '',
+        // weight: initialData.weight || '',
+        // dimensions: initialData.dimensions || '',
       });
     }
   }, [initialData]);
@@ -49,7 +49,7 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
       return true; // Always valid for edit mode
     } else {
       // For update mode, check if all fields are filled
-      const requiredFields = ['currentLocation', 'arrivalDate', 'departureDate', 'status', 'description'];
+      const requiredFields = ['currentLocation', 'arrivalDate', 'status', 'description'];
       return requiredFields.every(field => formData[field].trim() !== '');
     }
   };
@@ -84,9 +84,9 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
           </h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             {isEdit ? (
-              // Edit mode fields
+              // OLD - Edit mode fields
               <>
-                <div>
+                {/* <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="sender">
                     Sender
                   </label>
@@ -133,7 +133,7 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
                     onChange={handleChange}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
-                </div>
+                </div> */}
               </>
             ) : (
               // Update mode fields
@@ -181,11 +181,13 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
                     Departure Date from Location
                   </label>
                   <input
-                    type="date"
+                    type="text"
                     name="departureDate"
-                    value={formData.departureDate}
-                    onChange={handleChange}
-                    required
+                    readOnly={true}
+                    placeholder={lastLocationDepartureDate}
+                    // value={formData.departureDate}
+                    // onChange={handleChange}
+                    // required
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>

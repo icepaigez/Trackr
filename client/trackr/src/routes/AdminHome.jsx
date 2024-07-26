@@ -21,6 +21,7 @@ const AdminHome = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingSection, setEditingSection] = useState(null);
   const [lastLocation, setLastLocation] = useState(null);
+  const [lastLocationDepartureDate, setlastLocationDepartureDate] = useState(null);
   const [inputValue, setInputValue] = useState('');
 
   const navigate = useNavigate();
@@ -30,13 +31,14 @@ const AdminHome = () => {
     navigate('/generate');
   };
  
-  const getLastLocation = async (trackingNumber) => {
+  const getLastLocation = async (trackingNumber) => { 
     try {
       let url = getApiUrl('/api/v0/track/get-package');
       const response = await axios.post(url, { trackingNumber });
       const { data, status } = response;
       if (status === 200) {
         setLastLocation(data?.lastLocation);
+        setlastLocationDepartureDate(data?.date);
       }
     } catch(err) {
       console.error('Failed to get last location:', err);
@@ -45,7 +47,7 @@ const AdminHome = () => {
  
   const handleUpdatePackage = async (updatedData, isEdit = false, timestamp = null) => {
     try {
-      const response = await updatePackageDetails(selectedTracking, updatedData, lastLocation, isEdit, timestamp);
+      const response = await updatePackageDetails(selectedTracking, updatedData, lastLocation, isEdit, timestamp, lastLocationDepartureDate);
       if (response.status === 200) {
         toast.success(isEdit ? 'Package edited successfully!' : 'Package updated successfully!');
         // Refresh tracking data after update
@@ -119,7 +121,7 @@ const AdminHome = () => {
       default:
         if (editingSection?.startsWith('update-')) {
           const updateTimestamp = editingSection.split('-')[1];
-          return (
+          return ( 
             <EditUpdateForm
               initialData={packageData[updateTimestamp]}
               onSubmit={handleUpdatePackage}
@@ -232,6 +234,7 @@ const AdminHome = () => {
             onUpdate={handleUpdatePackage}
             lastLocation={lastLocation}
             isEdit={false}
+            lastLocationDepartureDate={lastLocationDepartureDate}
           />
         )}
       </div>

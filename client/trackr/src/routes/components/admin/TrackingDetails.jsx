@@ -82,7 +82,7 @@ const TrackingDetails = ({ details, trackingNumber, onEditSection }) => {
             <p><strong>Details:</strong> {update?.details}</p>
           </div>
         );
-      })}
+      })} 
     </div>
   );
 };

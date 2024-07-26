@@ -8,7 +8,7 @@ const {
 } = require("../../../../config/utils");
 const { db } = require("../../../../config/firebase/firebase");
 
-
+ 
 
 router.get('/packages', (req, res) => {
     const packagesRef = db.ref('trackingNumbers');
@@ -36,20 +36,22 @@ router.post('/get-package', async (req, res) => {
         const trackingNumberRef = db.ref('trackingNumbers/' + trackingNumber.toUpperCase());
         trackingNumberRef.once('value', snapshot => {
             const data = snapshot.val();
-            let lastLocation;
+            let lastLocation, date;
             if (data) {
                 if (Object.keys(data).length === 1) {
                     //no status yet
                     lastLocation = data?.created?.origin
+                    date = data?.created?.shippingDate
                 } else {
                     //get the most recent status
                     const currentStatus = getLatestStatus(data)
                     if (currentStatus) {
                         lastLocation = currentStatus?.arrived?.location
                         lastLocation = lastLocation?.includes('at') ? lastLocation?.split('at')[1]?.trim() : lastLocation
+                        date = currentStatus?.arrived?.time
                     }
                 }
-                res.status(200).send({ lastLocation })
+                res.status(200).send({ lastLocation, date });
             } else {
                 res.status(404).send({ message: 'Tracking number not found' });
             }
@@ -167,10 +169,10 @@ router.post('/track-package', async(req, res) => {
 })
   
 router.post('/update', async(req, res) => {
-    const { packageNumber, updateData, lastLocation, isEdit, timestamp } = req.body;
+    const { packageNumber, updateData, lastLocation, isEdit, timestamp, lastLocationDepartureDate } = req.body;
     const trackingNumberRef = db.ref('trackingNumbers/' + packageNumber.toUpperCase());
     if (isEdit === false) {
-        const { currentLocation, arrivalDate, departureDate, status, description } = updateData
+        const { currentLocation, arrivalDate, status, description } = updateData
         try {
             trackingNumberRef.once('value', snapshot => {
                 const data = snapshot.val();
@@ -185,7 +187,7 @@ router.post('/update', async(req, res) => {
                     };
                     dataPoint['departed'] = {
                         "location": lastLocation,
-                        "time": departureDate
+                        "time": lastLocationDepartureDate
                     };
                     dataPoint['status'] = status;
                     currentStatus[dateTimeEpoch] = dataPoint;
