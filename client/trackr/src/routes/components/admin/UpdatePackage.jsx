@@ -4,29 +4,18 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
   const [formData, setFormData] = useState({
     currentLocation: '',
     arrivalDate: '',
-    // departureDate: '',
     status: '',
     description: '',
-    // Add more fields as needed for editing
-    // sender: '',
-    // recipient: '',
-    // weight: '', 
-    // dimensions: '',
   });
+  const [dateError, setDateError] = useState('');
 
   useEffect(() => {
     if (initialData) {
       setFormData({
         currentLocation: initialData.currentLocation || '',
         arrivalDate: initialData.arrivalDate || '',
-        // departureDate: initialData.departureDate || '',
         status: initialData.status || '',
         description: initialData.description || '',
-        // Add more fields for editing
-        // sender: initialData.sender || '',
-        // recipient: initialData.recipient || '',
-        // weight: initialData.weight || '',
-        // dimensions: initialData.dimensions || '',
       });
     }
   }, [initialData]);
@@ -37,39 +26,46 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
       ...prevState,
       [name]: value
     }));
+
+    // Check if the arrival date is valid
+    if (name === 'arrivalDate') {
+      const arrivalDate = new Date(value);
+      const departureDate = new Date(lastLocationDepartureDate);
+      
+      if (arrivalDate < departureDate) {
+        setDateError('Arrival date cannot be earlier than the departure date from the last location.');
+      } else {
+        setDateError('');
+      }
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(formData, isEdit);
+    if (!dateError) {
+      onUpdate(formData, isEdit);
+    }
   };
 
   const isFormValid = () => {
     if (isEdit) {
-      return true; // Always valid for edit mode
+      return true;
     } else {
-      // For update mode, check if all fields are filled
       const requiredFields = ['currentLocation', 'arrivalDate', 'status', 'description'];
-      return requiredFields.every(field => formData[field].trim() !== '');
+      return requiredFields.every(field => formData[field].trim() !== '') && !dateError;
     }
   };
 
   const handleCancel = () => {
     if (isEdit) {
-      // For edit mode, reset form data to initial values
       setFormData({
         currentLocation: initialData.currentLocation || '',
         arrivalDate: initialData.arrivalDate || '',
-        departureDate: initialData.departureDate || '',
         status: initialData.status || '',
         description: initialData.description || '',
-        sender: initialData.sender || '',
-        recipient: initialData.recipient || '',
-        weight: initialData.weight || '',
-        dimensions: initialData.dimensions || '',
       });
     }
-    // Call the onClose function passed from the parent
+    setDateError('');
     onClose();
   };
 
@@ -83,60 +79,7 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
             {isEdit ? 'Edit Package' : 'Update Package'}
           </h3>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {isEdit ? (
-              // OLD - Edit mode fields
-              <>
-                {/* <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="sender">
-                    Sender
-                  </label>
-                  <input
-                    type="text"
-                    name="sender"
-                    value={formData.sender}
-                    onChange={handleChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="recipient">
-                    Recipient
-                  </label>
-                  <input
-                    type="text"
-                    name="recipient"
-                    value={formData.recipient}
-                    onChange={handleChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="weight">
-                    Weight
-                  </label>
-                  <input
-                    type="text"
-                    name="weight"
-                    value={formData.weight}
-                    onChange={handleChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="dimensions">
-                    Dimensions
-                  </label>
-                  <input
-                    type="text"
-                    name="dimensions"
-                    value={formData.dimensions}
-                    onChange={handleChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </div> */}
-              </>
-            ) : (
-              // Update mode fields
+            {!isEdit && (
               <>
                 <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="currentLocation">
@@ -163,6 +106,7 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
                     required
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
+                  {dateError && <p className="text-red-500 text-xs italic mt-1">{dateError}</p>}
                 </div>
                 <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastLocation">
@@ -185,9 +129,6 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
                     name="departureDate"
                     readOnly={true}
                     placeholder={lastLocationDepartureDate}
-                    // value={formData.departureDate}
-                    // onChange={handleChange}
-                    // required
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
