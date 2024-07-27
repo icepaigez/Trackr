@@ -52,10 +52,10 @@ const EditPackageForm = ({ initialData, onSubmit, onCancel }) => {
     return ['length', 'width', 'height', 'weight'].includes(key);
   };
 
-  const getDropdownOptions = (key) => {
+  const getDropdownOptions = (key) => { 
     switch (key) {
       case 'serviceType':
-        return ['Express', 'Standard', 'Economy'];
+        return ['Express', 'Air Cargo', 'Sea Cargo', 'Local'];
       case 'packageType':
         return ['Box', 'Envelope', 'Pallet'];
       case 'contentsCategory':

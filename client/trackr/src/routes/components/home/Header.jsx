@@ -28,7 +28,7 @@ const Header = ({ btnText, func }) => {
           className="text-[#111418] text-sm sm:text-lg font-bold leading-tight tracking-[-0.015em] cursor-pointer"
           onClick={() => navigate('/')}
         >
-          Morning Star Express
+          Morning Star Logistics
         </h2>
       </div>
       <div className="flex items-center gap-4">

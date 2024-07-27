@@ -19,7 +19,7 @@ function Footer() {
     },
     {
       title: 'Find a location',
-      description: 'Find a Morning Star Express near you',
+      description: 'Find a Morning Star Logistics location near you',
       image: 'https://cdn.usegalileo.ai/sdxl10/89ef3662-3bba-4e33-9b08-3b8979f83650.png',
     },
   ];

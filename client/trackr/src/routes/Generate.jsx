@@ -43,7 +43,7 @@ const GenerateTrackingNumber = () => {
 
   const requiredFields = [
     'origin', 'destination', 'weight', 'recipient', 'recipientPhone',
-    'sender', 'senderPhone', 'shippingDate', 'estimatedDelivery'
+    'sender', 'senderPhone', 'shippingDate', 'estimatedDelivery', 'recipientEmail'
   ];
 
   const handleChange = (e) => {
@@ -221,9 +221,10 @@ const GenerateTrackingNumber = () => {
                     required
                     >
                     <option value="">Select a service type</option>
-                    <option value="express">Express</option>
-                    <option value="standard">Standard</option>
-                    <option value="economy">Economy</option>
+                    <option value="Express">Express</option>
+                    <option value="Air Cargo">Air Cargo</option>
+                    <option value="Sea Cargo">Sea Cargo</option>
+                    <option value="Local">Local</option>
                     </select>
                 </div>
                 <div>
@@ -294,13 +295,14 @@ const GenerateTrackingNumber = () => {
                     ></textarea>
                 </div>
                 <div>
-                    <label className="block mb-2">Recipient Email</label>
+                    <label className="block mb-2 font-bold">Recipient Email *</label>
                     <input
                     type="email"
                     name="recipientEmail"
                     value={formData.recipientEmail}
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
+                    required
                     />
                 </div>
                 <div>

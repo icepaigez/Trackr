@@ -5,8 +5,8 @@ function ShipmentFacts({  status, origin, destination, shippedOn }) {
     { label: "Status", value: status },
     { label: "Origin", value: origin },
     { label: "Destination", value: destination },
-    { label: "Shipped on", value: shippedOn },
-    { label: "Service", value: "Morning Star Express" }
+    { label: "Collection Date", value: shippedOn },
+    { label: "Service", value: "Morning Star Logistics" },
   ];
 
   return (
