@@ -43,7 +43,8 @@ const GenerateTrackingNumber = () => {
 
   const requiredFields = [
     'origin', 'destination', 'weight', 'recipient', 'recipientPhone',
-    'sender', 'senderPhone', 'shippingDate', 'estimatedDelivery', 'recipientEmail'
+    'sender', 'senderPhone', 'shippingDate', 'estimatedDelivery', 'recipientEmail',
+    'declaredValue'
   ];
 
   const handleChange = (e) => {
@@ -316,13 +317,14 @@ const GenerateTrackingNumber = () => {
                     />
                 </div>
                 <div>
-                    <label className="block mb-2">Declared Value</label>
+                    <label className="block mb-2 font-bold">Declared Value *</label>
                     <input
                     type="number"
                     name="declaredValue"
                     value={formData.declaredValue}
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
+                    required
                     />
                 </div>
                 <div>
