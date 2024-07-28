@@ -46,8 +46,8 @@ const TrackingDetails = ({ details, trackingNumber, onEditSection }) => {
               : 'None'}
           </p>
           <p><strong>Contents Category:</strong> { createdInfo?.contentsCategory ? createdInfo?.contentsCategory : 'None' }</p>
-          <p><strong>Declared Value:</strong> {createdInfo?.declaredValue ? `$${createdInfo?.declaredValue}` : 'None'}</p>
-          <p><strong>Insurance:</strong> {createdInfo?.insurance ? createdInfo?.insurance : 'None'}</p>
+          <p><strong>Declared Value (NGN):</strong> {createdInfo?.declaredValue ? `${createdInfo?.declaredValue}` : 'None'}</p>
+          <p><strong>Insurance (NGN):</strong> {createdInfo?.insurance ? createdInfo?.insurance : 'None'}</p>
           <p><strong>Sender:</strong> {createdInfo?.sender}</p>
           <p><strong>Sender Phone:</strong> {createdInfo?.senderPhone}</p>
           <p><strong>Sender Email:</strong> {createdInfo?.senderEmail ? createdInfo?.senderEmail : 'None'}</p>
