@@ -147,6 +147,7 @@ const UpdatePackage = ({ isOpen, onClose, initialData, onUpdate, lastLocation, i
                     <option value="In Transit">In Transit</option>
                     <option value="Delivered">Delivered</option>
                     <option value="Delayed">Delayed</option>
+                    <option value="Returned">Returned</option>
                   </select>
                 </div>
                 <div>

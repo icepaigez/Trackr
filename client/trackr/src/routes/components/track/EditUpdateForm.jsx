@@ -50,6 +50,7 @@ const EditUpdateForm = ({ initialData, onSubmit, onCancel, updateTimestamp }) =>
           <option value="In Transit">In Transit</option>
           <option value="Delivered">Delivered</option>
           <option value="Delayed">Delayed</option>
+          <option value="Returned">Returned</option>
         </select>
       </div>
       <div>
