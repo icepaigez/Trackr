@@ -25,7 +25,7 @@ const AdminHome = () => {
   const [inputValue, setInputValue] = useState('');
 
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { userRole, logout } = useAuth();
 
   const handleGenerateNewTracking = () => {
     navigate('/generate');
@@ -86,9 +86,14 @@ const AdminHome = () => {
   };
 
   const handleEditSection = (section) => {
-    setEditingSection(section);
-    setIsEditing(true);
-    setIsViewingDetails(false);
+    if (userRole === 'admin') {
+      setEditingSection(section);
+      setIsEditing(true);
+      setIsViewingDetails(false);
+    } else {
+      toast.error('You do not have permission to edit this section!');
+      return
+    }
   };
 
   const renderEditForm = () => {

@@ -123,7 +123,7 @@ const EditPackageForm = ({ initialData, onSubmit, onCancel }) => {
       <h2 className="text-xl font-bold mb-4">Edit Package Information</h2>
       {Object.entries(formData).map(([key, value]) => (
         <div key={key}>
-          <label className="block mb-1 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</label>
+          <label className="block mb-1 capitalize">{key === 'declaredValue' | key === 'insurance' ? `${key.replace(/([A-Z])/g, ' $1').trim()}(NGN)` : key.replace(/([A-Z])/g, ' $1').trim()}:</label>
           {renderField(key, value)}
         </div>
       ))}
@@ -134,5 +134,5 @@ const EditPackageForm = ({ initialData, onSubmit, onCancel }) => {
     </form>
   );
 };
-
+ 
 export default EditPackageForm;

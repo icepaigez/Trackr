@@ -317,7 +317,7 @@ const GenerateTrackingNumber = () => {
                     />
                 </div>
                 <div>
-                    <label className="block mb-2 font-bold">Declared Value *</label>
+                    <label className="block mb-2 font-bold">Declared Value (NGN) *</label>
                     <input
                     type="number"
                     name="declaredValue"
@@ -359,7 +359,7 @@ const GenerateTrackingNumber = () => {
                     ></textarea>
                 </div>
                 <div>
-                    <label className="block mb-2">Insurance</label>
+                    <label className="block mb-2">Insurance (NGN)</label>
                     <input
                     type="text"
                     name="insurance"
