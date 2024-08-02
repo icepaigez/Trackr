@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider, } from "react-router-dom";
-import { AuthProvider } from './context/AuthContext.jsx';
+import { AuthProvider, ErrorBoundary } from './context/AuthContext.jsx';
 import ProtectedRoute from './routes/components/ProtectedRoute.jsx';
 import Home from './routes/Home.jsx';
 import ErrorPage from './ErrorPage.jsx';
@@ -56,8 +56,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ErrorBoundary>
   </React.StrictMode>,
 )
