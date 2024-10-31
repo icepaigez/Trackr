@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import Header from './components/home/Header';
 import { getApiUrl } from '../config/config';

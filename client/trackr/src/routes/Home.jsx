@@ -1,4 +1,3 @@
-import React from 'react';
 import Header from './components/home/Header';
 import Navbar from './components/home/NavBar';
 import Hero from './components/home/Hero';
@@ -15,6 +14,14 @@ function Home() {
         </div>
         <Footer />
       </div>
+      <a
+        href="https://wa.me/2348143451317"
+        className="whatsapp_float"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i className="fa fa-whatsapp whatsapp-icon"></i>
+      </a>
     </div>
   );
 }
