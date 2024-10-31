@@ -1,5 +1,29 @@
 const { customAlphabet } = require('nanoid');
+const { google } = require('googleapis');
+const { serviceAccount, isProduction } = require("./firebase/firebase");
 
+const SPREADSHEET_ID = isProduction ? process.env.SPREADSHEET_ID : process.env.SPREADSHEET_ID_DEV;
+
+const client = new google.auth.JWT(
+  serviceAccount.client_email,
+  null,
+  serviceAccount.private_key,
+  ['https://www.googleapis.com/auth/spreadsheets']
+);
+
+async function connectToSheets() {
+  return new Promise((resolve, reject) => {
+    client.authorize(function(err, tokens) {
+      if (err) {
+        console.log(err);
+        reject(err);
+        return;
+      }
+      console.log('Successfully connected!');
+      resolve(client);
+    });
+  });
+}
 
 const generateTrackingNumber = () => {
   const nanoidLower = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 10);
@@ -41,10 +65,12 @@ const getLatestStatus = obj => {
 }
 
 
-
+ 
 
 module.exports = {
     generateTrackingNumber,
     isValidTrackingNumber,
-    getLatestStatus
+    getLatestStatus,
+    connectToSheets,
+    SPREADSHEET_ID
 }

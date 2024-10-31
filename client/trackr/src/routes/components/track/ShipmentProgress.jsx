@@ -13,10 +13,15 @@ function ShipmentProgress({ data }) {
       title: trackingData?.departed?.location,
       date: trackingData?.departed?.time
     },
+    // {
+    //   icon: pin,
+    //   title: trackingData?.arrived?.location,
+    //   date: trackingData?.arrived?.time
+    // },
     {
       icon: pin,
-      title: trackingData?.arrived?.location,
-      date: trackingData?.arrived?.time
+      title: trackingData?.status,
+      date: null
     },
     {
       icon: copy,

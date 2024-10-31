@@ -10,6 +10,7 @@ import AdminHome from './routes/AdminHome.jsx';
 import GenerateTrackingNumber from './routes/Generate.jsx';
 import Signup from './routes/Signup.jsx';
 import Login from './routes/Login.jsx';
+import Contact from './routes/Contact.jsx';
 import './index.css'
 
 
@@ -50,6 +51,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/contact",
+    element: <Contact />,
     errorElement: <ErrorPage />,
   }
 ]);

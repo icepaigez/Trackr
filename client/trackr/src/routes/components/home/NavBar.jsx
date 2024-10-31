@@ -6,7 +6,7 @@ const Navbar = () => {
     { name: 'Track', path: '/track' },
     { name: 'Ship', path: '/' },
     // { name: 'Enterprise Logistics Services', path: '/enterprise' },
-    { name: 'Customer Service', path: '/' },
+    { name: 'Customer Service', path: '/contact' },
   ];
 
   return (

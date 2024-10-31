@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import UpdatePackage from './components/admin/UpdatePackage';
 import EditTrackingForm from './components/track/EditTrackingForm';
 import EditPackageForm from './components/track/EditPackageForm';
 import EditUpdateForm from './components/track/EditUpdateForm';
-import { fetchAllPackages, updatePackageDetails } from '../utils/utils';
+import { fetchAllPackages, updatePackageDetails, deleteUpdate } from '../utils/utils';
 import { getApiUrl } from '../config/config';
 import { useAuth } from '../context/AuthContext';
 
@@ -23,6 +23,8 @@ const AdminHome = () => {
   const [lastLocation, setLastLocation] = useState(null);
   const [lastLocationDepartureDate, setlastLocationDepartureDate] = useState(null);
   const [inputValue, setInputValue] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [deleteSection, setDeleteSection] = useState([]);
 
   const navigate = useNavigate();
   const { userRole, logout } = useAuth();
@@ -76,13 +78,27 @@ const AdminHome = () => {
     setInputValue(value);
     
     const filtered = Object.entries(trackingData).reduce((acc, [number, details]) => {
-      if (details?.created?.sender?.toLowerCase().includes(value)) {
+      if (
+        details?.created?.sender?.toLowerCase().includes(value) || 
+        details?.created?.recipient?.toLowerCase().includes(value)
+      ) {
         acc[number] = details;
       }
       return acc;
     }, {});
     
-    setFilteredData(filtered);
+    if (Object.keys(filtered).length === 0) {
+      let trackingNumbers = Object.keys(trackingData);
+      let keysToFilter = trackingNumbers.filter(trackingNumber => trackingNumber.toLowerCase().includes(value));  
+      const filteredObj = Object.fromEntries(
+        Object.entries(trackingData).filter(([key]) => 
+          keysToFilter.map(k => k.toLowerCase()).includes(key.toLowerCase())
+        )
+      );
+      setFilteredData(filteredObj);
+    } else {
+      setFilteredData(filtered);
+    }
   };
  
   const handleEditSection = (section) => {
@@ -95,6 +111,17 @@ const AdminHome = () => {
       return
     }
   };
+
+  const handleDeleteSection = (section, trackingNumber) => {
+    if (userRole === 'admin') {
+      setShowConfirmModal(true)
+      setDeleteSection([section, trackingNumber])
+    } else {
+      toast.error('You do not have permission to delete this section!');
+      return
+    }
+  }
+
 
   const renderEditForm = () => {
     const packageData = filteredData[selectedTracking];
@@ -210,6 +237,7 @@ const AdminHome = () => {
                       details={filteredData[selectedTracking]} 
                       trackingNumber={selectedTracking} 
                       onEditSection={handleEditSection}
+                      onDeleteSection={handleDeleteSection}
                     />
                     <div className="mt-4 flex justify-start space-x-4">
                       <button
@@ -241,6 +269,46 @@ const AdminHome = () => {
             isEdit={false}
             lastLocationDepartureDate={lastLocationDepartureDate}
           />
+        )}
+
+        {/* Confirmation modal */}
+        {showConfirmModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md md:w-2/3 lg:w-1/2 text-center">
+            <p className="text-lg font-semibold mb-4">This is an irreversible action, are you absolutely sure?</p>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={() => {
+                  deleteUpdate(deleteSection[0], deleteSection[1])
+                    .then(r => {
+                      if (r.status === 200) {
+                        setShowConfirmModal(false)
+                        const loadTrackingData = async () => {
+                          const data = await fetchAllPackages();
+                          setTrackingData(data?.packages);
+                          setFilteredData(data?.packages);
+                        };
+                        loadTrackingData();
+                        toast.success(r?.data?.message)
+                        return;
+                      }
+                      toast.error("An error occurred, please try again!.")
+                    })
+                  
+                }}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
         )}
       </div>
       <ToastContainer />

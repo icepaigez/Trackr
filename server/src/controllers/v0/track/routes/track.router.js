@@ -222,5 +222,16 @@ router.post('/update', async(req, res) => {
     }  	
 })
 
+router.delete('/delete', async(req, res) => {
+    const { section, trackingNumber } = req.body;
+    try {
+        await db.ref('trackingNumbers/' + trackingNumber).child(section).remove();
+        res.status(200).send({message:"Operation successful!"})
+    } catch (error) {
+        res.status(500).send({ error: 'Error deleting section: ', section }); 
+        console.log('Error when deleting section', error)
+    }
+})
+
 
 exports.Track = router;  

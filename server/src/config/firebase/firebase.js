@@ -22,5 +22,7 @@ const db = admin.database();
 
 module.exports = {
     db, 
-    getAuth
+    getAuth,
+    serviceAccount,
+    isProduction
 }

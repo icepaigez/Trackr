@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,7 +10,7 @@ import { getApiUrl } from '../config/config';
 
 const Track = () => {
   const location = useLocation();
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [trackingNumber, setTrackingNumber] = useState(location.state?.trackingNumber || '');
   const [trackingData, setTrackingData] = useState(location.state?.trackingData);
   const [loading, setLoading] = useState(false);

@@ -11,7 +11,7 @@ const Header = ({ btnText, func }) => {
     { name: 'Track', path: '/track' },
     { name: 'Ship', path: '/ship' },
     // { name: 'Enterprise Logistics Services', path: '/enterprise' },
-    { name: 'Customer Service', path: '/customer-service' },
+    { name: 'Customer Service', path: '/contact' },
   ];
 
   return (

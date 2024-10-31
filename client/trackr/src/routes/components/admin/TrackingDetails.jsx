@@ -1,6 +1,6 @@
-import React from 'react';
+// import React from 'react';
 
-const TrackingDetails = ({ details, trackingNumber, onEditSection }) => {
+const TrackingDetails = ({ details, trackingNumber, onEditSection, onDeleteSection }) => {
   const formatDate = (timestamp) => {
     return new Date(parseInt(timestamp)).toLocaleString();
   };
@@ -68,12 +68,20 @@ const TrackingDetails = ({ details, trackingNumber, onEditSection }) => {
           <div key={timestamp} className="mt-4 border-t pt-2">
             <h4 className="font-semibold flex justify-between items-center">
               {formatDate(timestamp)}
-              <button
-                onClick={() => onEditSection(`update-${timestamp}`)}
-                className="px-2 py-1 bg-blue-500 text-white rounded text-sm"
-              >
-                Edit
-              </button>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => onEditSection(`update-${timestamp}`)}
+                  className="px-2 py-1 bg-blue-500 text-white rounded text-sm"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => onDeleteSection(timestamp, trackingNumber)}
+                  className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                >
+                  Delete
+                </button>
+              </div>
             </h4>
             <p><strong>ID:</strong> {timestamp}</p>
             <p><strong>Status:</strong> {update?.status}</p>
